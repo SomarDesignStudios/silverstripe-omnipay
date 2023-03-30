@@ -2,6 +2,7 @@
 
 namespace SilverStripe\Omnipay;
 
+use IntlDateFormatter;
 use Omnipay\Common\CreditCard;
 use SilverStripe\Core\Config\Configurable;
 use SilverStripe\Core\Injector\Injectable;
@@ -144,9 +145,11 @@ class GatewayFieldsFactory
     {
         $months = array();
         //generate list of months
+        $format = new IntlDateFormatter(locale_get_default(), IntlDateFormatter::NONE, 
+            IntlDateFormatter::NONE, NULL, NULL, "MMMM");
         for ($x = 1; $x <= 12; $x++) {
             // Fixes #145 - Thanks to @digitall-it
-            $months[$x] = str_pad($x, 2, '0', STR_PAD_LEFT) . " - " . strftime('%B', mktime(0, 0, 0, $x, 1));
+            $months[$x] = str_pad($x, 2, '0', STR_PAD_LEFT) . " - " . datefmt_format($format, mktime(0, 0, 0, $x, 1));
         }
         $year = date('Y');
         $range = 5;
